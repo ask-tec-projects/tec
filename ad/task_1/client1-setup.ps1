@@ -14,7 +14,7 @@ new-netipaddress -InterfaceIndex 6 -IPAddress 192.168.122.39 -PrefixLength 24 -D
 rename-computer -newname client1
 
 # Change DNS to the IP of server1.
-set-DNSClientServerAddress –interfaceIndex 6 –ServerAddresses "192.168.122.100"
+set-dnsclientserveraddress –interfaceIndex 6 –ServerAddresses "192.168.122.100"
 
 # Join domain.
 add-computer –domainname tec.dk -Credential TEC\Administrator -restart –force
