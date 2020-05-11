@@ -1,0 +1,89 @@
+# Install IIS.
+install-windowsfeature -name Web-Server -includemanagementtools
+
+# Allow website administration.
+import-module WebAdministration
+
+# Create website.
+mkdir C:\sites\demo_site
+new-website -name demo_site -physicalpath C:\sites\demo_site
+
+# Delete existing website.
+remove-website -name "Default Web Site"
+
+# Start the created website.
+start-website -name "demo_site"
+
+# Now transfer the index.html file to your server with scp:
+# `scp index.html Administrator@192.168.122.100:c\:\\sites\\demo_site`.
+
+# To verify if the server is running properly curl is used on the host machine:
+# curl http://192.168.122.100:3000/
+
+# Now to verify that the server is running on the correct domain run the
+# following on any of the virtual machines:
+
+invoke-webrequest -uri "tec.dk"
+
+# The content field should be "<h1>Hello, World!</h1>" with a http status code
+# of 200.
+
+# Make a CNAME record for www.tec.dk.
+add-dnsserverresourcerecordcname -name "www" -hostnamealias "tec.dk" -zonename "tec.dk"
+
+# Clear DNS cache.
+ipconfig /flushdns
+
+# Now to verify that the server is running on the correct domain run the
+# following on any of the virtual machines:
+
+invoke-webrequest -uri "www.tec.dk"
+
+# The content field should be "<h1>Hello, World!</h1>" with a http status code
+# of 200.
+get-dnsserverresourcerecord -zonename tec.dk
+
+# To list all the DNS resource records run the following:
+# HostName                  RecordType Timestamp            TimeToLive      RecordData                  
+# --------                  ---------- ---------            ----------      ----------                  
+# @                         A          5/11/2020 10:00:0... 00:10:00        192.168.122.200             
+# @                         A          5/11/2020 10:00:0... 00:10:00        192.168.122.100             
+# @                         NS         0                    01:00:00        server2.tec.dk.             
+# @                         NS         0                    01:00:00        server1.tec.dk.             
+# @                         SOA        0                    01:00:00        [130][server1.tec.dk.][h... 
+# _msdcs                    NS         0                    01:00:00        win-pp5s48da5hg.tec.dk.     
+# _gc._tcp.Default-First... SRV        5/11/2020 10:00:0... 00:10:00        [0][100][3268][server2.t... 
+# _gc._tcp.Default-First... SRV        5/11/2020 10:00:0... 00:10:00        [0][100][3268][server1.t... 
+# _kerberos._tcp.Default... SRV        4/30/2020 10:00:0... 00:10:00        [0][100][88][server2.tec... 
+# _kerberos._tcp.Default... SRV        5/11/2020 10:00:0... 00:10:00        [0][100][88][server1.tec... 
+# _ldap._tcp.Default-Fir... SRV        5/11/2020 10:00:0... 00:10:00        [0][100][389][server1.te... 
+# _ldap._tcp.Default-Fir... SRV        5/11/2020 10:00:0... 00:10:00        [0][100][389][server2.te... 
+# _gc._tcp                  SRV        5/11/2020 10:00:0... 00:10:00        [0][100][3268][server2.t... 
+# _gc._tcp                  SRV        5/11/2020 10:00:0... 00:10:00        [0][100][3268][server1.t... 
+# _kerberos._tcp            SRV        4/30/2020 10:00:0... 00:10:00        [0][100][88][server2.tec... 
+# _kerberos._tcp            SRV        5/11/2020 10:00:0... 00:10:00        [0][100][88][server1.tec... 
+# _kpasswd._tcp             SRV        4/30/2020 10:00:0... 00:10:00        [0][100][464][server2.te... 
+# _kpasswd._tcp             SRV        5/11/2020 10:00:0... 00:10:00        [0][100][464][server1.te... 
+# _ldap._tcp                SRV        5/11/2020 10:00:0... 00:10:00        [0][100][389][server2.te... 
+# _ldap._tcp                SRV        5/11/2020 10:00:0... 00:10:00        [0][100][389][server1.te... 
+# _kerberos._udp            SRV        4/30/2020 10:00:0... 00:10:00        [0][100][88][server2.tec... 
+# _kerberos._udp            SRV        5/11/2020 10:00:0... 00:10:00        [0][100][88][server1.tec... 
+# _kpasswd._udp             SRV        4/30/2020 10:00:0... 00:10:00        [0][100][464][server2.te... 
+# _kpasswd._udp             SRV        5/11/2020 10:00:0... 00:10:00        [0][100][464][server1.te... 
+# client1                   A          4/30/2020 10:00:0... 00:20:00        192.168.122.10              
+# DomainDnsZones            A          4/29/2020 1:00:00 PM 00:10:00        192.168.122.200             
+# DomainDnsZones            A          5/11/2020 10:00:0... 00:10:00        192.168.122.100             
+# _ldap._tcp.Default-Fir... SRV        4/30/2020 10:00:0... 00:10:00        [0][100][389][server2.te... 
+# _ldap._tcp.Default-Fir... SRV        5/11/2020 10:00:0... 00:10:00        [0][100][389][server1.te... 
+# _ldap._tcp.DomainDnsZones SRV        4/30/2020 10:00:0... 00:10:00        [0][100][389][server2.te... 
+# _ldap._tcp.DomainDnsZones SRV        5/11/2020 10:00:0... 00:10:00        [0][100][389][server1.te... 
+# ForestDnsZones            A          4/29/2020 1:00:00 PM 00:10:00        192.168.122.200             
+# ForestDnsZones            A          5/11/2020 10:00:0... 00:10:00        192.168.122.100             
+# _ldap._tcp.Default-Fir... SRV        4/30/2020 10:00:0... 00:10:00        [0][100][389][server2.te... 
+# _ldap._tcp.Default-Fir... SRV        5/11/2020 10:00:0... 00:10:00        [0][100][389][server1.te... 
+# _ldap._tcp.ForestDnsZones SRV        4/30/2020 10:00:0... 00:10:00        [0][100][389][server2.te... 
+# _ldap._tcp.ForestDnsZones SRV        5/11/2020 10:00:0... 00:10:00        [0][100][389][server1.te... 
+# server1                   A          0                    01:00:00        192.168.122.100             
+# server2                   A          0                    01:00:00        192.168.122.200             
+# win-pp5s48da5hg           A          0                    01:00:00        192.168.122.100             
+# www                       CNAME      0                    01:00:00        tec.dk.        
