@@ -1,5 +1,8 @@
 # Active Directory
 
+*This folder is a subset of the git repository at
+https://github.com/Kruhlmann/tec.
+
 Each folder corresponds to an assignment from itslearning. Every assignment
 apart from assignment 7 has been completed with the powershell scripts found
 inside.
