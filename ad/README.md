@@ -1,4 +1,4 @@
-# Active Directory
+# Windows server configuration
 
 *This folder is a subset of the git repository at
 https://github.com/Kruhlmann/tec*.
