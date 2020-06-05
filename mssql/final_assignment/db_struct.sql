@@ -141,3 +141,4 @@ create user [customer_repo_inserter] for login [customer_repo_inserter];
 
 grant select on schema::dbo to [customer_repo_selecter];
 grant insert on schema::dbo to [customer_repo_inserter];
+go;
