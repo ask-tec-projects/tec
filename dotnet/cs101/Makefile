@@ -1,0 +1,9 @@
+BIN_DEBUG_DIR:=bin/Debug/netcoreapp3.1
+SRC_DIR:=src
+PROGRAM_NAME:=cs101
+PROGRAM:=${BIN_DEBUG_DIR}/${PROGRAM_NAME}
+CS_SOURCES ?= $(shell find "$(SRC_DIR)" -type f -name '*.cs')
+PROJECT_CONFIGURATION_FILE:=cs101.csproj
+
+${PROGRAM}: ${CS_SOURCES} ${PROJECT_CONFIGURATION_FILE}
+	dotnet build

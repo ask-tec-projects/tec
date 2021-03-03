@@ -1,0 +1,11 @@
+/mnt/hdd/home/doc/src/github.com/kruhlmann/tec/dotnet/cs101/bin/Debug/netcoreapp3.1/cs101
+/mnt/hdd/home/doc/src/github.com/kruhlmann/tec/dotnet/cs101/bin/Debug/netcoreapp3.1/cs101.deps.json
+/mnt/hdd/home/doc/src/github.com/kruhlmann/tec/dotnet/cs101/bin/Debug/netcoreapp3.1/cs101.runtimeconfig.json
+/mnt/hdd/home/doc/src/github.com/kruhlmann/tec/dotnet/cs101/bin/Debug/netcoreapp3.1/cs101.runtimeconfig.dev.json
+/mnt/hdd/home/doc/src/github.com/kruhlmann/tec/dotnet/cs101/bin/Debug/netcoreapp3.1/cs101.dll
+/mnt/hdd/home/doc/src/github.com/kruhlmann/tec/dotnet/cs101/bin/Debug/netcoreapp3.1/cs101.pdb
+/mnt/hdd/home/doc/src/github.com/kruhlmann/tec/dotnet/cs101/obj/Debug/netcoreapp3.1/cs101.csprojAssemblyReference.cache
+/mnt/hdd/home/doc/src/github.com/kruhlmann/tec/dotnet/cs101/obj/Debug/netcoreapp3.1/cs101.AssemblyInfoInputs.cache
+/mnt/hdd/home/doc/src/github.com/kruhlmann/tec/dotnet/cs101/obj/Debug/netcoreapp3.1/cs101.AssemblyInfo.cs
+/mnt/hdd/home/doc/src/github.com/kruhlmann/tec/dotnet/cs101/obj/Debug/netcoreapp3.1/cs101.dll
+/mnt/hdd/home/doc/src/github.com/kruhlmann/tec/dotnet/cs101/obj/Debug/netcoreapp3.1/cs101.pdb
