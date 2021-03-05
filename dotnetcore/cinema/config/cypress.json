@@ -1,0 +1,15 @@
+{
+    "pluginsFile": "config/cypress/plugins/index.ts",
+    "integrationFolder": "tests/integration/",
+    "screenshotsFolder": "screenshots",
+    "fixturesFolder": "config/cypress/fixtures",
+    "supportFile": "config/cypress/support/index.ts",
+    "waitForAnimations": true,
+    "baseUrl": "http://localhost:3000",
+    "video": false,
+    "reporter": "junit",
+    "reporterOptions": {
+        "mochaFile": "integration-report.xml",
+        "toConsole": true
+    }
+}

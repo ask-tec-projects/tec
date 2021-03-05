@@ -1,0 +1,40 @@
+{
+    "payloads": {
+        "director": {
+            "id": "472f8a99-986a-45a5-ac0b-7c69db4147c0",
+            "first_name": "Steven",
+            "last_name": "Spielberg",
+            "date_of_birth": "1967-04-03",
+            "thumbnail": "/dev/tty1"
+        },
+        "movie": {
+            "id": "472f8a99-986a-45a5-ac0b-7c69db4147c1",
+            "title": "Taken",
+            "description": "Lorem Ipsum",
+            "release_date": "2000-01-01T00:00:00.000Z",
+            "minimum_age": 13,
+            "thumbnail": "/dev/tty1",
+            "director_id": "472f8a99-986a-45a5-ac0b-7c69db4147c0",
+            "genres": ["472f8a99-986a-45a5-ac0b-7c69db4147c2"]
+        },
+        "genre": {
+            "id": "472f8a99-986a-45a5-ac0b-7c69db4147c2",
+            "name": "Action"
+        },
+        "show": {
+            "id": "472f8a99-986a-45a5-ac0b-7c69db4147c3",
+            "date": "2000-01-01T00:00:00.000Z",
+            "hall_id": "472f8a99-986a-45a5-ac0b-7c69db4147c4",
+            "movie_id": "472f8a99-986a-45a5-ac0b-7c69db4147c1"
+        },
+        "hall": {
+            "id": "472f8a99-986a-45a5-ac0b-7c69db4147c4",
+            "name": "Hall one"
+        },
+        "seat": {
+            "id": "472f8a99-986a-45a5-ac0b-7c69db4147c5",
+            "hall_id": "472f8a99-986a-45a5-ac0b-7c69db4147c4",
+            "number": 1
+        }
+    }
+}
