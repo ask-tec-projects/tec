@@ -168,7 +168,8 @@ export class Show extends Model {
     public static async associate(): Promise<void> {
         return Promise.all([
             Show.belongsTo(Movie, { foreignKey: { name: "movie_id", allowNull: false } }),
-            Show.belongsTo(Hall, { foreignKey: { name: "hall_id", allowNull: false } }),
+            Show.belongsTo(Seat, { foreignKey: { name: "seat_id", allowNull: false } }),
+            Show.belongsTo(User, { foreignKey: { name: "user_id", allowNull: false } }),
         ]).then();
     }
 }

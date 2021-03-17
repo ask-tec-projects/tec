@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
-import * as test_objects from "../../../config/test_objects.json";
 import { HttpStatusCode } from "../../../src/lib/http_status_codes";
+import { payloads } from "../../../src/lib/seed_payloads";
 
 let genre_id: string;
 
@@ -14,11 +14,11 @@ describe("Genre endpoint", () => {
     });
 
     it("creates a new genre", () => {
-        cy.request("POST", "/api/genres", test_objects.payloads.genre).then((response) => {
+        cy.request("POST", "/api/genres", payloads.genre).then((response) => {
             expect(response.status).to.equal(HttpStatusCode.CREATED);
             expect(response.body).to.have.property("id");
             expect(response.body).to.have.property("name");
-            expect(response.body.name).to.equal(test_objects.payloads.genre.name);
+            expect(response.body.name).to.equal(payloads.genre.name);
             genre_id = response.body.id;
         });
     });
@@ -34,7 +34,7 @@ describe("Genre endpoint", () => {
             expect(response.status).to.equal(HttpStatusCode.OK);
             const body = JSON.parse(response.body);
             expect(body.id).to.equal(genre_id);
-            expect(body.name).to.equal(test_objects.payloads.genre.name);
+            expect(body.name).to.equal(payloads.genre.name);
         });
     });
 

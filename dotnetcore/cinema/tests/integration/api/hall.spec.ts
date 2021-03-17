@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
-import * as test_objects from "../../../config/test_objects.json";
 import { HttpStatusCode } from "../../../src/lib/http_status_codes";
+import { payloads } from "../../../src/lib/seed_payloads";
 
 let hall_id: string;
 
@@ -14,11 +14,11 @@ describe("Hall endpoint", () => {
     });
 
     it("creates a new hall", () => {
-        cy.request("POST", "/api/halls", test_objects.payloads.hall).then((response) => {
+        cy.request("POST", "/api/halls", payloads.hall).then((response) => {
             expect(response.status).to.equal(HttpStatusCode.CREATED);
             expect(response.body).to.have.property("id");
             expect(response.body).to.have.property("name");
-            expect(response.body.name).to.equal(test_objects.payloads.hall.name);
+            expect(response.body.name).to.equal(payloads.hall.name);
             hall_id = response.body.id;
         });
     });
@@ -34,7 +34,7 @@ describe("Hall endpoint", () => {
             expect(response.status).to.equal(HttpStatusCode.OK);
             const body = JSON.parse(response.body);
             expect(body.id).to.equal(hall_id);
-            expect(body.name).to.equal(test_objects.payloads.hall.name);
+            expect(body.name).to.equal(payloads.hall.name);
         });
     });
 

@@ -10,7 +10,7 @@ export async function get(_request: Request, response: Response): Promise<void> 
 }
 
 export async function post(request: Request, response: Response): Promise<void> {
-    Seat.create(request.body)
+    Seat.create({ number: request.body["number"], hall_id: request.body["hall_id"] })
         .catch((error) => {
             console.error(error);
             response.status(HttpStatusCode.INTERNAL_SERVER_ERROR).end();

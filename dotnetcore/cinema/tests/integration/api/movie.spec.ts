@@ -1,20 +1,13 @@
 /// <reference types="cypress" />
 
-import * as test_objects from "../../../config/test_objects.json";
-import {HttpStatusCode} from "../../../src/lib/http_status_codes";
+import { HttpStatusCode } from "../../../src/lib/http_status_codes";
+import { payloads } from "../../../src/lib/seed_payloads";
 
-let director_id: string;
-let genre_id: string;
 let movie_id: string;
 
 describe("Movie endpoint", () => {
     before(() => {
-        cy.request("POST", "/api/directors", test_objects.payloads.director).then((response) => {
-            director_id = response.body.id;
-        });
-        cy.request("POST", "/api/genres", test_objects.payloads.genre).then((response) => {
-            genre_id = response.body.id;
-        });
+        cy.request("POST", "/api/seed/movies");
     });
 
     it("gets an empty movie list", () => {
@@ -25,18 +18,22 @@ describe("Movie endpoint", () => {
     });
 
     it("creates a new movie", () => {
-        cy.request("POST", "/api/movies", { ...test_objects.payloads.movie, director_id, genres: [genre_id] }).then((response) => {
+        cy.request("POST", "/api/movies", {
+            ...payloads.movie,
+            director_id: payloads.director.id,
+            genres: [payloads.genre.id],
+        }).then((response) => {
             expect(response.status).to.equal(HttpStatusCode.CREATED);
             expect(response.body).to.have.property("id");
             expect(response.body).to.have.property("title");
             expect(response.body).to.have.property("description");
             expect(response.body).to.have.property("minimum_age");
             expect(response.body).to.have.property("director_id");
-            expect(response.body.title).to.equal(test_objects.payloads.movie.title);
-            expect(response.body.description).to.equal(test_objects.payloads.movie.description);
-            expect(response.body.release_date).to.equal(test_objects.payloads.movie.release_date);
-            expect(response.body.minimum_age).to.equal(test_objects.payloads.movie.minimum_age);
-            expect(response.body.director_id).to.equal(director_id)
+            expect(response.body.title).to.equal(payloads.movie.title);
+            expect(response.body.description).to.equal(payloads.movie.description);
+            expect(response.body.release_date).to.equal(payloads.movie.release_date);
+            expect(response.body.minimum_age).to.equal(payloads.movie.minimum_age);
+            expect(response.body.director_id).to.equal(payloads.director.id);
             movie_id = response.body.id;
         });
     });
@@ -47,7 +44,7 @@ describe("Movie endpoint", () => {
             const body = JSON.parse(response.body);
             expect(body.length).to.equal(1);
         });
-        cy.request("GET", `/api/movies/genre/${genre_id}`).then((response) => {
+        cy.request("GET", `/api/movies/genre/${payloads.genre.id}`).then((response) => {
             expect(response.status).to.equal(HttpStatusCode.OK);
             const body = JSON.parse(response.body);
             expect(body.length).to.equal(1);
@@ -56,8 +53,8 @@ describe("Movie endpoint", () => {
             expect(response.status).to.equal(HttpStatusCode.OK);
             const body = JSON.parse(response.body);
             expect(body.id).to.equal(movie_id);
-            expect(body.genres[0].id).to.equal(genre_id);
-            expect(body.genres[0].name).to.equal(test_objects.payloads.genre.name);
+            expect(body.genres[0].id).to.equal(payloads.genre.id);
+            expect(body.genres[0].name).to.equal(payloads.genre.name);
         });
     });
 
@@ -75,6 +72,6 @@ describe("Movie endpoint", () => {
     });
 
     after(() => {
-        cy.request("DELETE", `/api/directors/id/${director_id}`);
-        cy.request("DELETE", `/api/genres/id/${genre_id}`);
+        cy.request("DELETE", "/api/seed/movies");
+    });
 });

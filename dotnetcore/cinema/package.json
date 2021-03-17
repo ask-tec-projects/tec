@@ -72,6 +72,7 @@
         "rollup-plugin-svelte": "^5.2.3",
         "rollup-plugin-terser": "^6.1.0",
         "sapper": "^0.27.16",
+        "sequelize-cli": "^6.2.0",
         "sonarqube-scanner": "^2.7.0",
         "svelte": "^3.24.0",
         "svelte-check": "^0.1.55",

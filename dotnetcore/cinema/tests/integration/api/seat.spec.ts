@@ -1,16 +1,13 @@
 /// <reference types="cypress" />
 
-import * as test_objects from "../../../config/test_objects.json";
 import { HttpStatusCode } from "../../../src/lib/http_status_codes";
+import { payloads } from "../../../src/lib/seed_payloads";
 
-let hall_id: string;
 let seat_id: string;
 
 describe("Seat endpoint", () => {
     before(() => {
-        cy.request("POST", "/api/halls", test_objects.payloads.hall).then((response) => {
-            hall_id = response.body.id;
-        });
+        cy.request("POST", "/api/seed/seats");
     });
 
     it("gets an empty seat list", () => {
@@ -21,11 +18,11 @@ describe("Seat endpoint", () => {
     });
 
     it("creates a new seat", () => {
-        cy.request("POST", "/api/seats", { hall_id, ...test_objects.payloads.seat }).then((response) => {
+        cy.request("POST", "/api/seats", { hall_id: payloads.hall.id, ...payloads.seat }).then((response) => {
             expect(response.status).to.equal(HttpStatusCode.CREATED);
             expect(response.body).to.have.property("id");
             expect(response.body).to.have.property("number");
-            expect(response.body.number).to.equal(test_objects.payloads.seat.number);
+            expect(response.body.number).to.equal(payloads.seat.number);
             seat_id = response.body.id;
         });
     });
@@ -41,7 +38,7 @@ describe("Seat endpoint", () => {
             expect(response.status).to.equal(HttpStatusCode.OK);
             const body = JSON.parse(response.body);
             expect(body.id).to.equal(seat_id);
-            expect(body.number).to.equal(test_objects.payloads.seat.number);
+            expect(body.number).to.equal(payloads.seat.number);
         });
     });
 
@@ -59,6 +56,6 @@ describe("Seat endpoint", () => {
     });
 
     after(() => {
-        cy.request("DELETE", `/api/halls/id/${hall_id}`);
+        cy.request("DELETE", "/api/seed/seats");
     });
 });
