@@ -52,7 +52,7 @@ export const payloads = {
         date_of_birth: "01-01-1970",
         email: "test@user.dev",
         is_administrator: false,
-        password: "$2b$10$TeScNXSi/smFMp1KPSegfuLmRlHCLUg7PrvW3hyxAAGIWqQq04fpS",
+        password: "Password123@",
     },
     admin: {
         id: admin_id,

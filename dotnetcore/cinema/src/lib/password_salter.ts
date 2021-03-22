@@ -7,10 +7,7 @@ export class PasswordSalter {
         return salted_password;
     }
 
-    public static validate_salted_password(
-        password: string,
-        salted_password: string,
-    ): boolean {
+    public static validate_salted_password(password: string, salted_password: string): boolean {
         const password_is_valid = bcrypt.compareSync(password, salted_password);
         return password_is_valid;
     }

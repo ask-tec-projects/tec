@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import { HttpStatusCode } from "../../../lib/http_status_codes";
 import { Booking, User } from "../../../lib/models";
+import { PasswordSalter } from "../../../lib/password_salter";
 
 export async function get(_request: Request, response: Response): Promise<void> {
     const all_users = await User.findAll({ include: [Booking] });
@@ -10,6 +11,7 @@ export async function get(_request: Request, response: Response): Promise<void> 
 }
 
 export async function post(request: Request, response: Response): Promise<void> {
+    request.body.password = PasswordSalter.salt_password(request.body.password);
     User.create(request.body)
         .catch((error) => {
             console.error(error);

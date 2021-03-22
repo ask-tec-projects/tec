@@ -13,3 +13,14 @@ export async function post_json<RequestBodyType, ResponseBodyType>(
         return response.json();
     });
 }
+
+export async function get_json<ResponseBodyType>(url: string): Promise<ResponseBodyType> {
+    return fetch(url, {
+        method: "GET",
+        headers: {
+            Accept: "application/json",
+        },
+    }).then((response) => {
+        return response.json();
+    });
+}

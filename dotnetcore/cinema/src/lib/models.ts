@@ -11,6 +11,11 @@ type InitializeableDatabaseModel = {
 const default_model_options = { underscored: true, createdAt: "created_at", updatedAt: "updated_at" };
 
 export class User extends Model {
+    public id?: string;
+    public password?: string;
+    // eslint-disable-next-line unicorn/no-null
+    public token: AuthenticationToken | null = null;
+
     public static async initialize(sequelize: Sequelize): Promise<Model<any, any>> {
         return User.init(
             {
@@ -30,8 +35,67 @@ export class User extends Model {
         );
     }
 
+    public async purge_auth_tokens(): Promise<void> {
+        await AuthenticationToken.destroy({ where: { user_id: this.id } });
+    }
+
+    public async assign_new_auth_token(): Promise<void> {
+        await AuthenticationToken.create({ expires: AuthenticationToken.get_new_expiry(), user_id: this.id }).catch(
+            (error) => {
+                console.error(`Error creating new auth token ${error}`);
+                throw error;
+            },
+        );
+    }
+
+    public async get_auth_token(): Promise<AuthenticationToken | undefined> {
+        return AuthenticationToken.findOne({ where: { user_id: this.id } }).then((token) => {
+            console.log(token);
+            return token || undefined;
+        });
+    }
+
     public static async associate(): Promise<void> {
-        return new Promise((resolve) => resolve());
+        return Promise.all([
+            User.hasMany(AuthenticationToken, { foreignKey: { name: "user_id", allowNull: false } }),
+        ]).then();
+    }
+}
+
+export class AuthenticationToken extends Model {
+    public id: string | undefined;
+
+    public static async initialize(sequelize: Sequelize): Promise<Model<any, any>> {
+        return AuthenticationToken.init(
+            {
+                id: {
+                    type: DataTypes.UUID,
+                    defaultValue: DataTypes.UUIDV4,
+                    primaryKey: true,
+                },
+                expires: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                },
+            },
+            { sequelize, modelName: "auth_tokens", ...default_model_options },
+        );
+    }
+
+    public static async associate(): Promise<void> {
+        return Promise.all([
+            AuthenticationToken.belongsTo(User, { foreignKey: { name: "user_id", allowNull: false } }),
+        ]).then();
+    }
+
+    public static get_new_expiry(): string {
+        const new_expiry = new Date();
+        new_expiry.setDate(new Date().getDate() + 1);
+        return new_expiry.toISOString();
+    }
+
+    public async refresh(): Promise<void> {
+        await this.update({ expires: AuthenticationToken.get_new_expiry() });
     }
 }
 
@@ -227,7 +291,7 @@ export class DatabaseModelBuilder {
             await this.create_model_database_associations(models);
             PostgresDatabaseConnection.instance.database.sync({ force: force_override_models });
         } catch (error) {
-            console.error("Error while initializing datatbase schema");
+            console.error("Error while initializing database schema");
             console.error(error);
         }
     }
@@ -240,9 +304,24 @@ export class DatabaseModelBuilder {
 
     private static async create_model_database_associations(models: InitializeableDatabaseModel[]): Promise<void> {
         for (const model of models) {
-            await model.associate();
+            await model.associate().catch((error) => {
+                console.error(`Error while creating associations for ${model}`);
+                throw error;
+            });
         }
     }
 }
 
-export const all_models = [Hall, Director, Seat, Genre, User, MovieGenre, Genre, Movie, Show, Booking];
+export const all_models = [
+    AuthenticationToken,
+    Hall,
+    Director,
+    Seat,
+    Genre,
+    User,
+    MovieGenre,
+    Genre,
+    Movie,
+    Show,
+    Booking,
+];
