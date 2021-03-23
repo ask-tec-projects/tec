@@ -1,11 +1,13 @@
 import babel from "@rollup/plugin-babel";
-import { terser } from "rollup-plugin-terser";
-import svelte_preprocess from "svelte-preprocess";
-import svelte from "rollup-plugin-svelte";
+import commonjs from "@rollup/plugin-commonjs";
 import resolve from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
 import typescript from "@rollup/plugin-typescript";
-import commonjs from "@rollup/plugin-commonjs";
+import svelte from "rollup-plugin-svelte";
+import { terser } from "rollup-plugin-terser";
+import json from "@rollup/plugin-json";
+import svelte_preprocess from "svelte-preprocess";
+
 import * as babel_config from "../babel.config";
 
 function make_babel_plugin_configuration() {
@@ -60,18 +62,14 @@ function make_resolve_plugin_configuration(is_server) {
     });
 }
 
-export function make_plugin_configuration(
-    node_environment,
-    is_in_development,
-    is_legacy,
-    is_server,
-) {
+export function make_plugin_configuration(node_environment, is_in_development, is_legacy, is_server) {
     const rollup_plugin_configurations = [
         make_resolve_plugin_configuration(is_server),
         make_svelte_plugin_configuration(is_server),
         make_replace_plugin_configuration(node_environment, is_server),
         typescript(),
         commonjs(),
+        json(),
     ];
 
     if (is_legacy && !is_server) {

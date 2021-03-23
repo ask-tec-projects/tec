@@ -1,8 +1,6 @@
 {
-    "name": "sapper-template",
-    "version": "1.0.0",
-    "description": "A svelte/sapper template repository",
-    "repository": "git@github.com:Kruhlmann/sapper-template.git",
+    "name": "cinema",
+    "version": "0.0.1",
     "author": "Andreas Krühlmann <andreas@kruhlmann.dev>",
     "license": "GPL-3.0-or-later",
     "engines": {

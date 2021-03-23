@@ -3,6 +3,7 @@
     import { notify_success, notify_error } from "../lib/notifications";
     import Modal from "../components/Modal.svelte";
     import Notifications from "../components/Notifications.svelte";
+    import {version} from "../../package.json";
 
     type RegisterForm = { first_name: string, last_name: string, email: string, password: string, is_administrator: boolean, date_of_birth: Date};
     type LoginForm ={email: string, password: string} ;
@@ -15,7 +16,6 @@
     export let seats
     export let shows;
     export let users;
-    console.log(genres, users);
 
     let register_form: RegisterForm = {
         first_name: "",
@@ -76,7 +76,7 @@
             <h1>Login</h1>
             <input type="text" name="email" bind:value="{login_form.email}" placeholder="Email">
             <input type="password" name="password" bind:value="{login_form.password}" placeholder="Password">
-            <button class="login" on:click="{request_login}">Login</button>
+            <button class="confirm" on:click="{request_login}">Login</button>
         </div>
     </Modal>
 {/if}
@@ -91,7 +91,7 @@
             <input type="password" name="password" bind:value="{register_form.password}" placeholder="Password">
             <input type="date" name="date_of_birth" bind:value="{register_form.date_of_birth}">
             <span>Add as administrator <input name="is_administrator" type="checkbox" bind:checked="{register_form.is_administrator}"></span>
-            <button class="login" on:click="{request_registration}">Register</button>
+            <button class="confirm" on:click="{request_registration}">Register</button>
         </div>
     </Modal>
 {/if}
@@ -100,6 +100,7 @@
 
 <main>
     <header>
+        <h1>Cinema v{version}</h1>
         <div class="item" on:click="{toggle_login_modal}">Login</div>
         <div class="item" on:click="{toggle_register_modal}">Register</div>
     </header>
@@ -108,17 +109,72 @@
 <Notifications />
 
 <style lang="scss">
+    @import "../scss/main";
+
+    :global(body) {
+        margin: 0;
+        background-color: $bg;
+        color: $fg;
+        font-family: "Lucida Console", "Courier New", monospace;
+    }
+
+    :global(input, button, textarea, option, select) {
+        padding: 8px;
+        background-color: $bg-hl;
+        color: $fg;
+        border: none;
+    }
+
+    :global(textarea) {
+        resize: none;
+    }
+
+    :global(button) {
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+
+        &.confirm {
+            background-color: $main;
+
+            &:hover {
+                background-color: $main-hl;
+            }
+        }
+    }
+
+    header {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        align-items: center;
+        padding: 0 5%;
+        box-sizing: border-box;
+        width: 100%;
+        background-color: $main;
+
+        h1 {
+            margin: 0;
+        }
+
+        .item {
+            font-size: 28px;
+            padding:  15px 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+
+            &:hover {
+                background-color: $main-hl;
+            }
+        }
+    }
+
     .modal-body {
         display: flex;
         flex-direction: column;
         padding: 20px;
+        background-color: $bg;
 
         & > * {
             margin: 10px 0;
-        }
-
-        input {
-            padding: 8px;
         }
     }
 </style>

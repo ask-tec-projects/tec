@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { notify_success, notify_error } from "../lib/notifications";
+    import Collapseable from "../components/Collapseable.svelte";
 
     import { post_json, get_json } from "../lib/http";
 
@@ -13,6 +14,7 @@
     let movies: Movie[] = [];
     let director_thumbnail_input: HTMLInputElement;
     let movie_thumbnail_input: HTMLInputElement;
+    let movie_thumbnail_filename: string | undefined;
 
     const genre_form: Genre = {
         name: "",
@@ -27,10 +29,17 @@
         title: "",
         description: "",
         release_date: new Date(),
-        minimum_age: 13,
+        minimum_age: 0,
         thumbnail: "",
         director_id: "",
         genre_id: "",
+    }
+
+    function movie_thumbnail_changed() {
+        if (!movie_thumbnail_input.files || movie_thumbnail_input.files.length === 0) {
+            return;
+        }
+        movie_thumbnail_filename = movie_thumbnail_input.value.split(/(\\|\/)/g).pop()
     }
 
     async function add_genre() {
@@ -98,37 +107,54 @@
 </script>
 
 <main>
-    <section>
-        <h1>Movies</h1>
-        <div class="form movie">
-            <input name="title" type="text" bind:value="{movie_form.title}" placeholder="Title">
-            <input name="desc" type="text" bind:value="{movie_form.description}" placeholder="Description">
-            <input type="date" bind:value="{movie_form.release_date}">
-            <input type="number" bind:value="{movie_form.minimum_age}">
-            <input type="file" name="file" bind:this="{movie_thumbnail_input}">
-            <span>Director</span>
-            <select class="director" bind:value="{movie_form.director_id}">
-                {#each directors as director}
-                    <option value="{director.id}">{director.first_name} {director.last_name}</option>
-                {/each}
-            </select>
-            <span>Genre</span>
-            <select class="genre" bind:value="{movie_form.genre_id}">
-                {#each genres as genre}
-                    <option value="{genre.id}">{genre.name}</option>
-                {/each}
-            </select>
-            <button on:click="{add_movie}">Submit</button>
-        </div>
-        <div class="rows">
-            {#each movies as movie}
+    <Collapseable title="Movies">
+        <section>
+            <div class="form movie">
                 <div class="row">
-                    <img src="/{movie.thumbnail}" alt="{movie.title}">
-                    <span>{movie.title} {movie.description} {movie.release_date} {movie.minimum_age}</span>
+                    <input name="title" type="text" bind:value="{movie_form.title}" placeholder="Title">
                 </div>
-            {/each}
-        </div>
-    </section>
+                <div class="row">
+                    <textarea rows="8" name="desc" type="text" bind:value="{movie_form.description}" placeholder="Description"></textarea>
+                </div>
+                <div class="row r6">
+                    <span>Release date</span>
+                    <input type="date" bind:value="{movie_form.release_date}">
+                    <span>Minimum age to watch</span>
+                    <input type="number" bind:value="{movie_form.minimum_age}">
+                    <span>Movie thumbnail</span>
+                    <div class="fileinput" on:click="{() => movie_thumbnail_input.click()}">
+                        <input type="file" name="file" style="position: absolute; top: -999px; left: -999px" bind:this="{movie_thumbnail_input}" on:change="{movie_thumbnail_changed}">
+                        <button class="confirm">{movie_thumbnail_filename || "Select file"}</button>
+                    </div>
+                </div>
+                <div class="row r4">
+                    <span>Director</span>
+                    <select class="director" bind:value="{movie_form.director_id}">
+                        {#each directors as director}
+                            <option value="{director.id}">{director.first_name} {director.last_name}</option>
+                        {/each}
+                    </select>
+                    <span>Genre</span>
+                    <select class="genre" bind:value="{movie_form.genre_id}">
+                        {#each genres as genre}
+                            <option value="{genre.id}">{genre.name}</option>
+                        {/each}
+                    </select>
+                </div>
+                <div class="row">
+                    <button class="confirm" on:click="{add_movie}">Submit</button>
+                </div>
+            </div>
+            <div class="rows">
+                {#each movies as movie}
+                    <div class="row">
+                        <img src="/{movie.thumbnail}" alt="{movie.title}">
+                        <span>{movie.title} {movie.description} {movie.release_date} {movie.minimum_age}</span>
+                    </div>
+                {/each}
+            </div>
+        </section>
+    </Collapseable>
 
     <section>
         <h1>Halls</h1>
@@ -142,7 +168,7 @@
         <h1>Genres</h1>
         <div class="form genre">
             <input name="name" type="text" bind:value="{genre_form.name}" placeholder="Genre name">
-            <button on:click="{add_genre}">Submit</button>
+            <button class="confirm" on:click="{add_genre}">Submit</button>
         </div>
         <div class="rows">
             {#each genres as genre}
@@ -160,7 +186,7 @@
             <input name="last_name" type="text" bind:value="{director_form.last_name}" placeholder="Last name">
             <input type="date" bind:value="{director_form.date_of_birth}">
             <input type="file" name="file" bind:this="{director_thumbnail_input}">
-            <button on:click="{add_director}">Submit</button>
+            <button class="confirm" on:click="{add_director}">Submit</button>
         </div>
         <div class="rows">
             {#each directors as director}
@@ -174,6 +200,10 @@
 </main>
 
 <style lang="scss">
+    main {
+        padding: 20px;
+    }
+
     .rows {
         display: flex;
         flex-direction: column;
@@ -185,6 +215,52 @@
             img {
                 width: 50px;
                 height: 50px;
+            }
+        }
+    }
+
+    section {
+        display: flex;
+        flex-direction: column;
+
+        .form {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-row-gap: 10px;
+
+            .row {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-column-gap: 10px;
+                align-items: center;
+
+                &.r2 {
+                    grid-template-columns: 1fr 1fr;
+                }
+
+                &.r3 {
+                    grid-template-columns: 1fr 1fr 1fr;
+                }
+
+                &.r4 {
+                    grid-template-columns: 1fr 1fr 1fr 1fr;
+                }
+
+                &.r5 {
+                    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+                }
+
+                &.r6 {
+                    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+                }
+            }
+
+            .fileinput {
+                width: 100%;
+
+                button {
+                    width: 100%;
+                }
             }
         }
     }

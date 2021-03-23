@@ -26,7 +26,7 @@ describe("Forms", () => {
 
     it("registers a movie", () => {
         cy.get(".form.movie input[name='title']").type("Movie #1");
-        cy.get(".form.movie input[name='desc']").type("Description");
+        cy.get(".form.movie textarea").type("Description");
         cy.get(".form.movie input[type='date']").type("1990-01-01");
         cy.get(".form.movie input[type='number']").type("18");
         cy.fixture("tile.png").then((file) => {
