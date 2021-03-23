@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
+import { Session } from "express-session";
 
-import { SapperSession } from "../../../typings";
 import { HttpStatusCode } from "../../lib/http_status_codes";
 import { User } from "../../lib/models";
 import { PasswordSalter } from "../../lib/password_salter";
 
-export async function post(request: Request & { session: SapperSession }, response: Response): Promise<void> {
+export async function post(request: Request & { session: Session }, response: Response): Promise<void> {
     if (request.body.password !== "") {
         request.body.password = PasswordSalter.salt_password(request.body.password);
     }

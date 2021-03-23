@@ -1,10 +1,19 @@
 import compression from "compression";
 import express, { Express } from "express";
+import fileupload from "express-fileupload";
 import session from "express-session";
 import sirv from "sirv";
 import swagger from "swagger-ui-express";
 
 import { logging_middleware, session_middleware } from "../lib/middleware";
+import { User } from "./models";
+
+declare module "express-session" {
+    interface Session {
+        token?: string;
+        user?: User;
+    }
+}
 
 export class ServerBuilder {
     public static make_sapper_express_server(sesstion_secret: string, devmode: boolean, basepath = ""): Express {
@@ -20,9 +29,10 @@ export class ServerBuilder {
                 }),
             )
             .use(logging_middleware())
-            .use(express.json())
+            .use(express.json({ limit: "2mb" }))
             .use(express.urlencoded({ extended: true }))
             .use("/docs", swagger.serve, swagger.setup(swagger_spec))
+            .use(fileupload())
             .use(...middleware);
     }
 }

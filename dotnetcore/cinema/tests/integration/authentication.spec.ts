@@ -52,4 +52,8 @@ describe("Authentication", () => {
         cy.get(".modal-body").should("not.exist");
         cy.get(".notification").contains("Invalid credentials").should("exist");
     });
+
+    it("", () => {
+        cy.visit("/admin");
+    });
 });

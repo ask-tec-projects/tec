@@ -1,12 +1,21 @@
 <script lang="ts">
-import { post_json } from "../lib/http";
-import { notify_success, notify_error } from "../lib/notifications";
-
+    import { post_json } from "../lib/http";
+    import { notify_success, notify_error } from "../lib/notifications";
     import Modal from "../components/Modal.svelte";
     import Notifications from "../components/Notifications.svelte";
 
     type RegisterForm = { first_name: string, last_name: string, email: string, password: string, is_administrator: boolean, date_of_birth: Date};
     type LoginForm ={email: string, password: string} ;
+
+    export let bookings;
+    export let directors;
+    export let genres;
+    export let halls;
+    export let movies;
+    export let seats
+    export let shows;
+    export let users;
+    console.log(genres, users);
 
     let register_form: RegisterForm = {
         first_name: "",
@@ -66,7 +75,7 @@ import { notify_success, notify_error } from "../lib/notifications";
         <div class="modal-body">
             <h1>Login</h1>
             <input type="text" name="email" bind:value="{login_form.email}" placeholder="Email">
-            <input type="text" name="password" bind:value="{login_form.password}" placeholder="Password">
+            <input type="password" name="password" bind:value="{login_form.password}" placeholder="Password">
             <button class="login" on:click="{request_login}">Login</button>
         </div>
     </Modal>
@@ -79,7 +88,7 @@ import { notify_success, notify_error } from "../lib/notifications";
             <input type="text" name="first_name" bind:value="{register_form.first_name}" placeholder="Given name">
             <input type="text" name="last_name" bind:value="{register_form.last_name}" placeholder="Surname">
             <input type="text" name="email" bind:value="{register_form.email}" placeholder="Email">
-            <input type="text" name="password" bind:value="{register_form.password}" placeholder="Password">
+            <input type="password" name="password" bind:value="{register_form.password}" placeholder="Password">
             <input type="date" name="date_of_birth" bind:value="{register_form.date_of_birth}">
             <span>Add as administrator <input name="is_administrator" type="checkbox" bind:checked="{register_form.is_administrator}"></span>
             <button class="login" on:click="{request_registration}">Register</button>

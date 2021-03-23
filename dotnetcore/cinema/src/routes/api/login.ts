@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
+import { Session } from "express-session";
 import { Op } from "sequelize";
 
-import { SapperSession } from "../../../typings";
 import { HttpStatusCode } from "../../lib/http_status_codes";
 import { AuthenticationToken, User } from "../../lib/models";
 import { PasswordSalter } from "../../lib/password_salter";
@@ -43,20 +43,22 @@ async function get_user_from_login_details(email: string, password: string): Pro
 }
 
 async function send_token(
-    request: Request & { session: SapperSession },
+    request: Request & { session: Session },
     response: Response,
     token?: AuthenticationToken,
+    user?: User,
 ): Promise<void> {
     if (token) {
         await token.refresh();
-        request.session.token = `${token.id}`;
+        request.session.token = token.id;
+        request.session.user = user;
         response.status(HttpStatusCode.OK).end(JSON.stringify({ token: token.id }));
     } else {
         response.status(HttpStatusCode.INTERNAL_SERVER_ERROR).end();
     }
 }
 
-export async function post(request: Request & { session: SapperSession }, response: Response): Promise<void> {
+export async function post(request: Request & { session: Session }, response: Response): Promise<void> {
     const { email, password } = request.body;
 
     const user = await get_user_from_login_details(email, password);
@@ -67,12 +69,12 @@ export async function post(request: Request & { session: SapperSession }, respon
 
     const existing_token = await get_existing_token(user.id);
     if (existing_token) {
-        return send_token(request, response, existing_token);
+        return send_token(request, response, existing_token, user);
     }
 
     await user.purge_auth_tokens();
     await user.assign_new_auth_token();
     const token = await user.get_auth_token();
 
-    send_token(request, response, token);
+    send_token(request, response, token, user);
 }
