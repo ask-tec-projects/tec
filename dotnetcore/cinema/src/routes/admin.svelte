@@ -164,24 +164,26 @@
         <h1>Seats</h1>
     </section>
 
-    <section>
-        <h1>Genres</h1>
-        <div class="form genre">
-            <div class="row">
-                <input name="name" type="text" bind:value="{genre_form.name}" placeholder="Genre name">
-            </div>
-            <div class="row">
-                <button class="confirm" on:click="{add_genre}">Submit</button>
-            </div>
-        </div>
-        <div class="rows">
-            {#each genres as genre}
+    <Collapseable title="Genres">
+        <section>
+            <h1>Genres</h1>
+            <div class="form genre">
                 <div class="row">
-                    <span>{genre.name}</span>
+                    <input name="name" type="text" bind:value="{genre_form.name}" placeholder="Genre name">
                 </div>
-            {/each}
-        </div>
-    </section>
+                <div class="row">
+                    <button class="confirm" on:click="{add_genre}">Submit</button>
+                </div>
+            </div>
+            <div class="rows">
+                {#each genres as genre}
+                    <div class="row">
+                        <span>{genre.name}</span>
+                    </div>
+                {/each}
+            </div>
+        </section>
+    </Collapseable>
 
     <Collapseable title="Director">
         <section>
@@ -214,6 +216,9 @@
 
 <style lang="scss">
     main {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-row-gap: 20px;
         padding: 20px;
     }
 
