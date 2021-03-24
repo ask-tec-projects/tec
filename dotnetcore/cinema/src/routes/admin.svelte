@@ -167,8 +167,12 @@
     <section>
         <h1>Genres</h1>
         <div class="form genre">
-            <input name="name" type="text" bind:value="{genre_form.name}" placeholder="Genre name">
-            <button class="confirm" on:click="{add_genre}">Submit</button>
+            <div class="row">
+                <input name="name" type="text" bind:value="{genre_form.name}" placeholder="Genre name">
+            </div>
+            <div class="row">
+                <button class="confirm" on:click="{add_genre}">Submit</button>
+            </div>
         </div>
         <div class="rows">
             {#each genres as genre}
@@ -179,24 +183,33 @@
         </div>
     </section>
 
-    <section>
-        <h1>Directors</h1>
-        <div class="form director">
-            <input name="first_name" type="text" bind:value="{director_form.first_name}" placeholder="First name">
-            <input name="last_name" type="text" bind:value="{director_form.last_name}" placeholder="Last name">
-            <input type="date" bind:value="{director_form.date_of_birth}">
-            <input type="file" name="file" bind:this="{director_thumbnail_input}">
-            <button class="confirm" on:click="{add_director}">Submit</button>
-        </div>
-        <div class="rows">
-            {#each directors as director}
+    <Collapseable title="Director">
+        <section>
+            <div class="form director">
                 <div class="row">
-                    <img src="/{director.thumbnail}" alt="{director.first_name} {director.last_name}">
-                    <span>{director.first_name} {director.last_name} {director.date_of_birth}</span>
+                    <input name="first_name" type="text" bind:value="{director_form.first_name}" placeholder="First name">
                 </div>
-            {/each}
-        </div>
-    </section>
+                <div class="row">
+                    <input name="last_name" type="text" bind:value="{director_form.last_name}" placeholder="Last name">
+                </div>
+                <div class="row r2">
+                    <input type="date" bind:value="{director_form.date_of_birth}">
+                    <input type="file" name="file" bind:this="{director_thumbnail_input}">
+                </div>
+                <div class="row">
+                    <button class="confirm" on:click="{add_director}">Submit</button>
+                </div>
+            </div>
+            <div class="rows">
+                {#each directors as director}
+                    <div class="row">
+                        <img src="/{director.thumbnail}" alt="{director.first_name} {director.last_name}">
+                        <span>{director.first_name} {director.last_name} {director.date_of_birth}</span>
+                    </div>
+                {/each}
+            </div>
+        </section>
+    </Collapseable>
 </main>
 
 <style lang="scss">
