@@ -167,7 +167,7 @@
         }
     }
 
-    .modal-body {
+    :global(.modal-body) {
         display: flex;
         flex-direction: column;
         padding: 20px;

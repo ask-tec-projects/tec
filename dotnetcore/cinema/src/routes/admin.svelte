@@ -8,9 +8,11 @@
     type Movie = { title: string, description: string, release_date: Date, minimum_age: number, thumbnail: string, director_id: string, genre_id: string};
     type Director = { first_name: string, last_name: string, date_of_birth: Date, thumbnail: string };
     type Genre = { name: string };
+    type Hall = { name: string };
 
     let genres: Genre[] = [];
     let directors: Director[] = [];
+    let halls: Hall[] = [];
     let movies: Movie[] = [];
     let director_thumbnail_input: HTMLInputElement;
     let movie_thumbnail_input: HTMLInputElement;
@@ -34,6 +36,9 @@
         director_id: "",
         genre_id: "",
     }
+    const hall_form: Hall = {
+        name: "",
+    }
 
     function movie_thumbnail_changed() {
         if (!movie_thumbnail_input.files || movie_thumbnail_input.files.length === 0) {
@@ -51,6 +56,15 @@
             }
         }).catch(() => {
             notify_error("Unable to add genre");
+        });
+    }
+
+    async function add_hall() {
+        return post_json<Hall, Hall & { id: string }>("/api/halls", hall_form).then((hall) => {
+            halls = [hall, ...halls];
+            notify_success("Hall added");
+        }).catch(() => {
+            notify_error("Unable to add hall");
         });
     }
 
@@ -103,6 +117,8 @@
     onMount(async () => {
         genres = await get_json("/api/genres");
         directors = await get_json("/api/directors");
+        halls = await get_json("/api/halls");
+        movies = await get_json("/api/movies");
     })
 </script>
 
@@ -156,13 +172,32 @@
         </section>
     </Collapseable>
 
-    <section>
-        <h1>Halls</h1>
-    </section>
+    <Collapseable title="Halls">
+        <section>
+            <h1>Halls</h1>
+            <div class="form hall">
+                <div class="row">
+                    <input name="name" type="text" bind:value="{hall_form.name}" placeholder="Hall name">
+                </div>
+                <div class="row">
+                    <button class="confirm" on:click="{add_hall}">Submit</button>
+                </div>
+            </div>
+            <div class="rows">
+                {#each halls as hall}
+                    <div class="row">
+                        <span>{hall.name}</span>
+                    </div>
+                {/each}
+            </div>
+        </section>
+    </Collapseable>
 
     <section>
         <h1>Seats</h1>
     </section>
+
+
 
     <Collapseable title="Genres">
         <section>

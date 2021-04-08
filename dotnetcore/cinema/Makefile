@@ -38,9 +38,6 @@ clean:
 		coverage/ \
 		doc/ \
 		__sapper__ \
-		src/*.js \
-		src/routes/helpers/*.js \
-		src/lib/*.js
 
 node_modules: package.json
 	@$(PKG_MANAGER) install
