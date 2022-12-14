@@ -19,7 +19,7 @@
         "bcrypt": "^5.0.0",
         "compression": "^1.7.4",
         "cypress-file-upload": "^5.0.3",
-        "express": "^4.17.1",
+        "express": "^4.17.3",
         "express-fileupload": "^1.2.1",
         "express-session": "^1.17.1",
         "pg": "^8.5.1",
